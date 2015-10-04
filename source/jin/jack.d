@@ -76,6 +76,6 @@ class Jack {
 
 unittest {
 	auto jack = new Jack;
-	auto res = jack.hack( File( "./examples/log.jack.tree" ) );
+	auto res = jack.hack( File( "./examples/test.jack.tree" ) );
 	res.pipe( stdout );
 }
