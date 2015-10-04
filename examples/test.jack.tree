@@ -9,8 +9,13 @@ test
 		=two
 	=two
 test
-	jack list tail list
-		=one
-		=two
-	=two
-
+	summ
+		int =1
+		int =2
+	int =3
+test
+	abs int =-1
+	int =1
+list test
+	jack list abs int =-1
+	int =1
