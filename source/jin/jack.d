@@ -19,35 +19,38 @@ class Jack {
 		auto jacks = [
 			"test" : delegate( Tree node ) {
 				if( node.length != 2 ) {
-					throw new Exception( "supports only two arguments: " ~ node.uri );
+					throw new Exception( "Supports only two arguments" );
 				}
 				auto one = this.hack( node[0] );
 				auto two = this.hack( node[1] );
 				if( one.to!string != two.to!string ) {
-					throw new Exception( "test fail: " ~ node.uri );
+					throw new Exception( "Test fail" );
 				}
 				return one;
 			},
 			"log" : delegate( Tree node ) {
 				if( node.length != 1 ) {
-					throw new Exception( "supports only one argument: " ~ node.uri );
+					throw new Exception( "Supports only one argument " );
 				}
 				auto res = this.hack( node[0] );
 				res.pipe( stdout );
 				return res;
 			},
-			"tree" : delegate( Tree node ) {
-				return Tree.List( node.childs );
+			"list" : delegate( Tree node ) {
+				return node;
+			},
+			"jack" : delegate( Tree node ) {
+				return this.hack( Tree.List( node[0].childs ) );
 			},
 			"head" : delegate( Tree node ) {
 				if( node.length != 1 ) {
-					throw new Exception( "supports only one argument: " ~ node.uri );
+					throw new Exception( "Supports only one argument" );
 				}
 				return this.hack( node[0] )[0];
 			},
 			"tail" : delegate( Tree node ) {
 				if( node.length != 1 ) {
-					throw new Exception( "supports only one argument: " ~ node.uri );
+					throw new Exception( "Supports only one argument" );
 				}
 				return this.hack( node[0] )[ $ - 1 ];
 			},
@@ -65,17 +68,21 @@ class Jack {
 			},
 		];
 
-		if( code.name in jacks ) {
-			return jacks[ code.name ]( code );
+		try {
+			if( code.name in jacks ) {
+				return jacks[ code.name ]( code );
+			}
+			return jacks[ "" ]( code );
+		} catch( Throwable e ) {
+			e.msg ~= "\n" ~ code.uri;
+			throw e;
 		}
-		
-		return jacks[ "" ]( code );
 	}
 
 }
 
 unittest {
 	auto jack = new Jack;
-	auto res = jack.hack( File( "./examples/test.jack.tree" ) );
-	res.pipe( stdout );
+	auto test = Tree.parse( File( "./examples/test.jack.tree" ) );
+	auto res = jack.hack( test );
 }

@@ -1,12 +1,16 @@
 test
-	head tree
+	head list
 		=one
 		=two
-		=three
-	=ono
+	=one
 test
-	tail tree
+	tail list
 		=one
 		=two
-		=three
-	=three
+	=two
+test
+	jack list tail list
+		=one
+		=two
+	=two
+
