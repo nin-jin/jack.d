@@ -1,0 +1,12 @@
+test
+	head tree
+		=one
+		=two
+		=three
+	=ono
+test
+	tail tree
+		=one
+		=two
+		=three
+	=one

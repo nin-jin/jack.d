@@ -1,0 +1,5 @@
+name "jack"
+description "Jack - mataprogramming language based on 'tree' format and 'lisp' ideology"
+license "public domain"
+authors "jin"
+dependency "jin-tree" version="1.0.2"

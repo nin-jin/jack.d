@@ -1,0 +1,10 @@
+.dub
+.vs
+docs.json
+__dummy.html
+*.o
+*.obj
+/*.lib
+/*.exe
+/*.visualdproj
+/*.sln
