@@ -10,12 +10,12 @@ test
 	=two
 test
 	summ
-		int =1
-		int =2
-	int =3
+		1
+		2
+	3
 test
-	abs int =-1
-	int =1
-list test
-	jack list abs int =-1
-	int =1
+	abs -1
+	1
+test
+	jack list abs -1
+	1
