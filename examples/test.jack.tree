@@ -1,21 +1,32 @@
 test
-	head list
-		=one
-		=two
-	=one
-test
-	tail list
-		=one
-		=two
-	=two
-test
-	summ
+	name =get first element of list
+	case head list
 		1
 		2
-	3
+	case 1
 test
-	abs -1
-	1
+	name =get last element of list
+	case tail list
+		1
+		2
+	case 2
 test
-	jack list abs -1
-	1
+	name =calculate summ of integers
+	case summ
+		1
+		2
+	case 3
+test
+	name =get absolute value of integer
+	case abs -1
+	case 1
+test
+	name =evaluate jack code from list
+	case jack list abs -1
+	case 1
+
+list let singleLetter? order?
+	0
+	x
+	10
+list if singleLetter? log x

@@ -72,16 +72,32 @@ static this() { toolsEmpty = [
 
 static Tools toolsAll = null;
 static this() { toolsAll = toolsEmpty.hack([
+	//"" : Tool( ( Tools tools , Tree code ) {
+	//    try {
+	//        return Tree.Name( "int" , Tree.Values([ code.name.to!int ]
+	//                                              ) ); 
+	//    } catch( Exception error ) {
+	//        Tree[] childs = [];
+	//        foreach( Tree child ; code.childs ) {
+	//            auto res = tools.jack( child );
+	//            if( res.name ) {
+	//                childs ~= res;
+	//            } else {
+	//                childs ~= res.childs;
+	//            }
+	//        }
+	//        return code.clone( childs );
+	//    }
+	//} ),
 	"test" : ( Tools tools , Tree code ) {
-		if( code.length != 2 ) {
-			throw new Exception( "Supports only two arguments" );
-		}
-		auto one = tools.jack( code[0] );
-		auto two = tools.jack( code[1] );
+		auto cases = code.select( "case" );
+		auto one = tools.jack( cases[0][0] );
+		auto two = tools.jack( cases[1][0] );
+		auto name = code.select( "name" );
 		if( one.to!string != two.to!string ) {
-			throw new Exception( "Test fail:\n" ~ one.to!string ~ two.to!string ~ "----------------" );
+			throw new Exception( "Test fail: " ~ name.to!string ~ one.to!string ~ two.to!string ~ "----------------" );
 		}
-		return one;
+		return code.clone( name.childs ~ cases.childs ~ [ Tree.Name( "result" , [ one ] ) ] );
 	},
 	"log" : ( Tools tools , Tree code ) {
 		if( code.length != 1 ) {
@@ -123,4 +139,5 @@ static this() { toolsAll = toolsEmpty.hack([
 
 unittest {
 	File( "./examples/test.jack.tree" ).jack( toolsAll ).pipe( stdout );
+	//Tree.Value( 123 ).pipe( stdout );
 }
