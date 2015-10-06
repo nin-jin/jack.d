@@ -1,32 +1,31 @@
 test
 	name =get first element of list
+	lisp =( CAR '( 1 2 ) )
 	case head list
 		1
 		2
 	case 1
 test
 	name =get last element of list
+	lisp =( CDR '( 1 2 ) )
 	case tail list
 		1
 		2
 	case 2
 test
 	name =calculate summ of integers
+	lisp =( + 1 2 )
 	case summ
 		1
 		2
 	case 3
 test
 	name =get absolute value of integer
+	lisp =( abs -1 )
 	case abs -1
 	case 1
 test
 	name =evaluate jack code from list
+	lisp =( EVAL '( abs -1 ) )
 	case jack list abs -1
-	case 1
-
-list let singleLetter? order?
-	0
-	x
-	10
-list if singleLetter? log x
+	case list 1

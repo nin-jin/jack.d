@@ -26,11 +26,11 @@ Tree jack( Tools tools , string code , string uri = "" ) {
 	return tools.jack( Tree.parse( code , uri ) );
 }
 
-Tree jack( Tools tools , Tree code ) {
-	return code.jack( tools );
+Tree jack( Tree code , Tools tools ) {
+	return tools.jack( code );
 }
 
-Tree jack( Tree code , Tools tools ) {
+Tree jack( Tools tools , Tree code ) {
 	try {
 		if( code.name in tools ) {
 			return tools[ code.name ]( tools , code );
@@ -48,7 +48,7 @@ Tools hack( Tools base , Tree function( Tools , Tree ) [ string ] addon ) {
 		tools[ name ] = Tool( addon[ name ] );
 	}
 	foreach( name , tool ; base ) {
-		if( name in addon ) continue;
+		if( name in tools ) continue;
 		tools[ name ] = tool;
 	}
 	return tools;
@@ -108,10 +108,13 @@ static this() { toolsAll = toolsEmpty.hack([
 		return res;
 	},
 	"list" : ( Tools tools , Tree code ) {
-		return Tree.List( code.childs );
+		return code;
+	},
+	"hide" : ( Tools tools , Tree code ) {
+		return code;
 	},
 	"jack" : ( Tools tools , Tree code ) {
-		return tools.jack( Tree.List( code[0].childs ) );
+		return code[0].clone( code[0].childs.map!( child => child.jack( tools ) ).array );
 	},
 	"head" : ( Tools tools , Tree code ) {
 		if( code.length != 1 ) {
