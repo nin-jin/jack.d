@@ -111,10 +111,16 @@ static this() { toolsAll = toolsEmpty.hack([
 		return code;
 	},
 	"hide" : ( Tools tools , Tree code ) {
-		return code;
+		return Tree.List([]);
 	},
 	"jack" : ( Tools tools , Tree code ) {
 		return code[0].clone( code[0].childs.map!( child => child.jack( tools ) ).array );
+	},
+	"name" : ( Tools tools , Tree code ) {
+		if( code.length != 1 ) {
+			throw new Exception( "Supports only one argument" );
+		}
+		return Tree.Value( tools.jack( code[0] ).name );
 	},
 	"head" : ( Tools tools , Tree code ) {
 		if( code.length != 1 ) {
@@ -122,11 +128,23 @@ static this() { toolsAll = toolsEmpty.hack([
 		}
 		return tools.jack( code[0] )[0];
 	},
+	"cut-head" : ( Tools tools , Tree code ) {
+		if( code.length != 1 ) {
+			throw new Exception( "Supports only one argument" );
+		}
+		return code[0].clone( code[0].childs[ 1 .. $ ].map!( child => child.jack( tools ) ).array );
+	},
 	"tail" : ( Tools tools , Tree code ) {
 		if( code.length != 1 ) {
 			throw new Exception( "Supports only one argument" );
 		}
 		return tools.jack( code[0] )[ $ - 1 ];
+	},
+	"cut-tail" : ( Tools tools , Tree code ) {
+		if( code.length != 1 ) {
+			throw new Exception( "Supports only one argument" );
+		}
+		return code[0].clone( code[0].childs[ 0 .. $ - 1 ].map!( child => child.jack( tools ) ).array );
 	},
 	"summ" : ( Tools tools , Tree code ) {
 		int res = 0;
