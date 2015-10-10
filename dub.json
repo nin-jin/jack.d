@@ -1,0 +1,9 @@
+{
+	"name" : "jack",
+	"description" : "Jack - mataprogramming language based on 'tree' format and 'lisp' ideology",
+	"license" : "public domain",
+	"authors" : [ "jin" ],
+	"dependencies" : {
+		"jin-tree" : "1.0.6"
+	}
+}
