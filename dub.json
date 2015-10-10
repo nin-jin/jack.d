@@ -4,6 +4,6 @@
 	"license" : "public domain",
 	"authors" : [ "jin" ],
 	"dependencies" : {
-		"jin-tree" : "~>1.1"
+		"jin-tree" : "~>1.1.1"
 	}
 }

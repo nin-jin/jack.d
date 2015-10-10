@@ -91,8 +91,8 @@ static this() { toolsAll = toolsEmpty.hack([
 	//} ),
 	"test" : ( Tools tools , Tree code ) {
 		auto cases = code.select( "case" );
-		auto one = tools[""]( tools , cases[0] );
-		auto two = tools[""]( tools , cases[1] );
+		auto one = tools[""]( tools , cases[0] ).rename( "result" );
+		auto two = tools[""]( tools , cases[1] ).rename( "result" );
 		auto name = code.select( "name" );
 		if( one.to!string != two.to!string ) {
 			throw new Exception( "Test fail: " ~ name.to!string ~ one.to!string ~ two.to!string ~ "----------------" );
