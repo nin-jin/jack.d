@@ -111,6 +111,11 @@ static this() { toolsAll = toolsEmpty.hack([
 	"tree" : ( Tools tools , Tree code ) {
 		return Tree.List( code.childs );
 	},
+	"make" : ( Tools tools , Tree code ) {
+		auto name = tools[""]( tools , code.select( "name" )[0] );
+		auto childs = tools[""]( tools , code.select( "child" )[0] );
+		return Tree.Name( name.value , childs.childs );
+	},
 	"hide" : ( Tools tools , Tree code ) {
 		return Tree.List([]);
 	},

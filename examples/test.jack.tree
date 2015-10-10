@@ -49,9 +49,13 @@ test
 
 test
 	name =quote tree
+	name =make tree node by name an child list
 	lisp ='( car '( 1 ) )
-	case name tree head 1
-	case =head
+	lisp =( cons car '( 1 ) )
+	case tree head 1
+	case make
+		name =head
+		child 1
 
 test
 	name =evaluate jack code
@@ -59,9 +63,11 @@ test
 	case jack tree head
 		1
 		2
-	case 1
+	case head
+		1
+		2
 
-tree scope
+hide scope
 	check order?
 		0
 		x
