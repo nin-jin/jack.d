@@ -60,10 +60,10 @@ static this() { toolsEmpty = [
 		Tree[] childs = [];
 		foreach( Tree child ; code.childs ) {
 			auto res = tools.jack( child );
-			if( res.name ) {
-				childs ~= res;
-			} else {
+			if( cast( TreeList ) res ) {
 				childs ~= res.childs;
+			} else {
+				childs ~= res;
 			}
 		}
 		return code.clone( childs );
@@ -91,70 +91,48 @@ static this() { toolsAll = toolsEmpty.hack([
 	//} ),
 	"test" : ( Tools tools , Tree code ) {
 		auto cases = code.select( "case" );
-		auto one = tools.jack( cases[0][0] );
-		auto two = tools.jack( cases[1][0] );
+		auto one = tools[""]( tools , cases[0] );
+		auto two = tools[""]( tools , cases[1] );
 		auto name = code.select( "name" );
 		if( one.to!string != two.to!string ) {
 			throw new Exception( "Test fail: " ~ name.to!string ~ one.to!string ~ two.to!string ~ "----------------" );
 		}
-		return code.clone( name.childs ~ cases.childs ~ [ Tree.Name( "result" , [ one ] ) ] );
+		return code.clone( name.childs ~ cases.childs ~ [ one ] );
 	},
 	"log" : ( Tools tools , Tree code ) {
-		if( code.length != 1 ) {
-			throw new Exception( "Supports only one argument" );
-		}
-		auto res = tools.jack( code[0] );
-		res.pipe( stdout );
-		return res;
-	},
-	"list" : ( Tools tools , Tree code ) {
+		code = Tree.List( tools[""]( tools , code ).childs );
+		code.pipe( stdout );
 		return code;
+	},
+	"name" : ( Tools tools , Tree code ) {
+		code = tools[""]( tools , code );
+		return Tree.List( code.childs.map!( child => Tree.Value( child.name ) ).array );
+	},
+	"tree" : ( Tools tools , Tree code ) {
+		return Tree.List( code.childs );
 	},
 	"hide" : ( Tools tools , Tree code ) {
 		return Tree.List([]);
 	},
 	"jack" : ( Tools tools , Tree code ) {
-		return code[0].clone( code[0].childs.map!( child => child.jack( tools ) ).array );
-	},
-	"name" : ( Tools tools , Tree code ) {
-		if( code.length != 1 ) {
-			throw new Exception( "Supports only one argument" );
-		}
-		return Tree.Value( tools.jack( code[0] ).name );
+		code = tools[""]( tools , code );
+		code = tools[""]( tools , code );
+		return Tree.List( code.childs );
 	},
 	"head" : ( Tools tools , Tree code ) {
-		if( code.length != 1 ) {
-			throw new Exception( "Supports only one argument" );
-		}
-		return tools.jack( code[0] )[0];
-	},
-	"cut-head" : ( Tools tools , Tree code ) {
-		if( code.length != 1 ) {
-			throw new Exception( "Supports only one argument" );
-		}
-		return code[0].clone( code[0].childs[ 1 .. $ ].map!( child => child.jack( tools ) ).array );
+		code = tools[""]( tools , code );
+		return code[0];
 	},
 	"tail" : ( Tools tools , Tree code ) {
-		if( code.length != 1 ) {
-			throw new Exception( "Supports only one argument" );
-		}
-		return tools.jack( code[0] )[ $ - 1 ];
+		code = tools[""]( tools , code );
+		return code[ $ - 1 ];
+	},
+	"cut-head" : ( Tools tools , Tree code ) {
+		code = tools[""]( tools , code );
+		return Tree.List( code[ 1 .. $ ] );
 	},
 	"cut-tail" : ( Tools tools , Tree code ) {
-		if( code.length != 1 ) {
-			throw new Exception( "Supports only one argument" );
-		}
-		return code[0].clone( code[0].childs[ 0 .. $ - 1 ].map!( child => child.jack( tools ) ).array );
-	},
-	"summ" : ( Tools tools , Tree code ) {
-		int res = 0;
-		foreach( Tree child ; code.childs ) {
-			res += tools.jack( child ).name.to!int;
-		}
-		return Tree.Name( res.to!string );
-	},
-	"abs" : ( Tools tools , Tree code ) {
-		return Tree.Name( abs( code[0].name.to!int ).to!string );
+		return Tree.List( code[ 0 .. $ - 1 ] );
 	},
 ]); }
 

@@ -1,61 +1,66 @@
 test
 	name =name of struct node as value node
-	case name list
-	case =list
+	case name
+		integer =1
+		float =1.1
+	case
+		=integer
+		=float
 
 test
 	name =get first element of list
 	lisp =( car '( 1 2 ) )
-	case head list
+	case head
 		1
 		2
+		3
 	case 1
 
 test
 	name =get last element of list
 	lisp =( car last '( 1 2 ) )
-	case tail list
+	case tail
 		1
 		2
-	case 2
+		3
+	case 3
 
 test
 	name =get list without first element
 	lisp =( cdr '( 1 2 ) )
-	case cut-head list
+	case cut-head
 		1
 		2
-	case list 2
+		3
+	case
+		2
+		3
 
 test
 	name =get list without last element
 	lisp =( butlast '( 1 2 ) )
-	case cut-tail list
+	case cut-tail
 		1
 		2
-	case list 1
-
-test
-	name =calculate summ of integers
-	lisp =( + 1 2 )
-	case summ
+		3
+	case
 		1
 		2
-	case 3
 
 test
-	name =get absolute value of integer
-	lisp =( abs -1 )
-	case abs -1
+	name =quote tree
+	lisp ='(  )
+	case name tree head 1
+	case =head
+
+test
+	name =evaluate jack code
+	case jack tree head
+		1
+		2
 	case 1
 
-test
-	name =evaluate jack code from list
-	lisp =( eval '( abs -1 ) )
-	case jack list abs -1
-	case list 1
-
-list scope
+tree scope
 	check order?
 		0
 		x
