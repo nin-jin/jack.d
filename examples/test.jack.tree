@@ -49,12 +49,13 @@ test
 
 test
 	name =quote tree
-	lisp ='(  )
+	lisp ='( car '( 1 ) )
 	case name tree head 1
 	case =head
 
 test
 	name =evaluate jack code
+	lisp =( eval '( car '( 1 2 ) ) )
 	case jack tree head
 		1
 		2
