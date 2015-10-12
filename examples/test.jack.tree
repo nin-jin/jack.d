@@ -9,63 +9,76 @@ test
 
 test
 	name =get first element of list
-	lisp =( car '( 1 2 ) )
+	lisp =( car '( 'one 'two 'three ) )
 	case head
-		1
-		2
-		3
-	case 1
+		=one
+		=two
+		=three
+	case =one
 
 test
 	name =get last element of list
-	lisp =( car last '( 1 2 ) )
+	lisp =( car last '( 'one 'two 'three ) )
 	case tail
-		1
-		2
-		3
-	case 3
+		=one
+		=two
+		=three
+	case =three
 
 test
 	name =get list without first element
-	lisp =( cdr '( 1 2 ) )
+	lisp =( cdr '( 'one 'two 'three ) )
 	case cut-head
-		1
-		2
-		3
+		=one
+		=two
+		=three
 	case
-		2
-		3
+		=two
+		=three
 
 test
 	name =get list without last element
-	lisp =( butlast '( 1 2 ) )
+	lisp =( butlast '( 'one 'two 'three ) )
 	case cut-tail
-		1
-		2
-		3
+		=one
+		=two
+		=three
 	case
-		1
-		2
+		=one
+		=two
 
 test
 	name =quote tree
 	name =make tree node by name an child list
-	lisp ='( car '( 1 ) )
-	lisp =( cons car '( 1 ) )
-	case tree head 1
+	lisp ='( car '( 'one ) )
+	lisp =( cons car '( 'one ) )
+	case tree head =one
 	case make
 		name =head
-		child 1
+		child =one
 
 test
 	name =evaluate jack code
-	lisp =( eval '( car '( 1 2 ) ) )
+	lisp =( eval '( car '( 'one 'two ) ) )
 	case jack tree head
-		1
-		2
+		=one
+		=two
 	case head
-		1
-		2
+		=one
+		=two
+
+hide test
+	name =define and use custom macro
+	case jack
+		let body cut-head cut-tail from
+		tree body
+			=one
+			=two
+			=three
+			=four
+	case
+		=two
+		=three
 
 hide scope
 	check order?
