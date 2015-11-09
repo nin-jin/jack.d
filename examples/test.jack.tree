@@ -1,10 +1,10 @@
 test
 	name =name of struct node as value node
 	case name
-		integer =1
+		int =1
 		float =1.1
 	case
-		=integer
+		=int
 		=float
 
 test
@@ -67,24 +67,91 @@ test
 		=one
 		=two
 
-hide test
+test
 	name =define and use custom macro
+	case jack
+		let pi float =3.14
+		tree pi
+	case float =3.14
+
+test
+	name =define and use custom macro with arguments
 	case jack
 		let body cut-head cut-tail from
 		tree body
-			=one
-			=two
-			=three
-			=four
+			=1
+			=2
+			=3
+			=4
 	case
-		=two
-		=three
+		=2
+		=3
 
-hide scope
-	check order?
-		0
+test
+	name =true when ordered
+	case order?
+		int =1
+		int =2
+		int =2
+	case true
+
+test
+	name =false when not ordered
+	case order?
+		int =1
+		int =2
+		int =1
+	case false
+
+test
+	name =true when all true
+	case every?
+		true
+		every?
+	case true
+
+test
+	name =false when some false
+	case every?
+		false
+		true
+	case false
+
+test
+	name =true when some true
+	case some?
+		false
+		true
+	case true
+
+test
+	name =false when all false
+	case some?
+		false
+		some?
+	case false
+
+test
+	name =true when false and false when true
+	case false? true
+	case false? false? false
+	case false
+
+hide
+	let ordered order?
+		int =0
 		x
-		10
-	case true log =yes
-	case false log =no
-	case ~number log =wrong input
+		int =10
+	case true
+	=yes
+	case false
+	=no
+	case ~number
+	=wrong input
+
+hide
+	let x =0 
+	scope
+		inc x
+		rewind
+	
