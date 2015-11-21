@@ -46,10 +46,10 @@ Tree jack( Tools tools , Tree code ) {
 		if( code.name in tools ) {
 			return tools[ code.name ]( tools , code );
 		}
-		throw new Exception( "Unknown type [" ~ code.name ~ "]" );
-		//return tools[ "" ]( tools , code );
+		//throw new Exception( "Unknown type [" ~ code.name ~ "]" );
+		return tools[ "" ]( tools , code );
 	} catch( Throwable e ) {
-		e.msg ~= "\n" ~ code.uri;
+		e.msg ~= "\n" ~ code.uri ~ " " ~ code.name;
 		throw e;
 	}
 }
@@ -88,20 +88,34 @@ static this() {
 		"hide" : ( Tools tools , Tree code ) {
 			return Tree.List([]);
 		},
+		"case" : ( Tools tools , Tree code ) {
+			code = tools[""]( tools , code );
+			return Tree.List( code.childs.map!( child => Tree.Name( child.name ~ "!" ).jack( tools ) ).array );
+		},
 		"jack" : ( Tools tools , Tree code ) {
 			Tools subTools;
-			foreach( let ; code["let "].childs ) {
-				subTools[ let.name ] = ( Tools tools , Tree code ) {
-					tools = tools ~ Tools([
-						"from" : ( Tools tools2 , Tree code2 ) {
-							return Tree.List( tools[""]( tools2 , code ).childs );
-						},
-					]);
-					return Tree.List( tools[""]( tools , let ).childs );
-				};
-			}
-			code = tools[""]( tools ~ subTools, code );
-			code = tools[""]( tools ~ subTools , code );
+			auto defTools = Tools([
+				"inherit" : ( Tools tools2 , Tree code2 ) {
+					subTools = tools ~ subTools;
+					return Tree.List([]);
+				},
+				"let" : ( Tools tools2 , Tree code2 ) {
+					foreach( let ; code2.childs ) {
+						if( let.name in subTools )  throw new Exception( "Redeclaration [" ~ let.name ~ "]" );
+						subTools[ let.name ] = ( Tools tools3 , Tree code3 ) {
+							tools3 = tools3 ~ Tools([
+								"from" : ( Tools tools4 , Tree code4 ) {
+									return Tree.List( tools[""]( tools4 , code3 ).childs );
+								},
+							]);
+							return Tree.List( tools[""]( tools3 , let ).childs );
+						};
+					}
+					return Tree.List([]);
+				},
+			]);
+			code = tools[""]( tools ~ defTools, code );
+			code = tools[""]( subTools , code );
 			return Tree.List( code.childs );
 		},
 		"let" : ( Tools tools , Tree code ) {

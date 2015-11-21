@@ -60,9 +60,11 @@ test
 test
 	name =evaluate jack code
 	lisp =( eval '( car '( 'one 'two ) ) )
-	case jack tree head
-		=one
-		=two
+	case jack
+		inherit
+		tree head
+			=one
+			=two
 	case head
 		=one
 		=two
@@ -70,6 +72,7 @@ test
 test
 	name =define and use custom macro
 	case jack
+		inherit
 		let pi float =3.14
 		tree pi
 	case float =3.14
@@ -77,6 +80,7 @@ test
 test
 	name =define and use custom macro with arguments
 	case jack
+		inherit
 		let body cut-head cut-tail from
 		tree body
 			=1
@@ -135,23 +139,38 @@ test
 	name =true when false and false when true
 	case false? true
 	case false? false? false
-	case false
 
-hide
-	let ordered order?
-		int =0
-		x
-		int =10
-	case true
-	=yes
-	case false
-	=no
-	case ~number
-	=wrong input
+hide test
+	name =true boolean condition
+	case jack
+		tree case false? false
+		let true! =yes
+		let false! =no
+	case =yes
+
+hide test
+	name =false boolean condition
+	case jack
+		tree switch false? true
+		when true =yes
+		when false =no
+	case =no
+
+hide test
+	name =handle exception on boolean condition
+	case jack
+		tree switch false? =xxx
+		when true =yes
+		when false =no
+		when not-bool =wrong
+	case =wrong
 
 hide
 	let x =0 
 	scope
 		inc x
 		rewind
-	
+
+hide ./math ./logic order?
+	int =1
+	int =2
