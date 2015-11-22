@@ -4,58 +4,61 @@ test
 		int =1
 		float =1.1
 	case
-		=int
-		=float
+		str =int
+		str =float
 
 test
 	name =get first element of list
 	lisp =( car '( 'one 'two 'three ) )
 	case head
-		=one
-		=two
-		=three
-	case =one
+		one
+		two
+		three
+	case one
 
 test
 	name =get last element of list
 	lisp =( car last '( 'one 'two 'three ) )
 	case tail
-		=one
-		=two
-		=three
-	case =three
+		one
+		two
+		three
+	case three
 
 test
 	name =get list without first element
 	lisp =( cdr '( 'one 'two 'three ) )
 	case cut-head
-		=one
-		=two
-		=three
+		one
+		two
+		three
 	case
-		=two
-		=three
+		two
+		three
 
 test
 	name =get list without last element
 	lisp =( butlast '( 'one 'two 'three ) )
 	case cut-tail
-		=one
-		=two
-		=three
+		one
+		two
+		three
 	case
-		=one
-		=two
+		one
+		two
 
 test
 	name =quote tree
 	name =make tree node by name an child list
 	lisp ='( car '( 'one ) )
 	lisp =( cons car '( 'one ) )
-	case tree head =one
+	case tree head
+		=one
+		two
 	case make
 		name =head
-		child =one
+		value =one
+		child two
 
 test
 	name =evaluate jack code
@@ -63,11 +66,11 @@ test
 	case jack
 		inherit
 		tree head
-			=one
-			=two
+			one
+			two
 	case head
-		=one
-		=two
+		one
+		two
 
 test
 	name =define and use custom macro
@@ -83,13 +86,13 @@ test
 		inherit
 		let body cut-head cut-tail from
 		tree body
-			=1
-			=2
-			=3
-			=4
+			one
+			two
+			three
+			four
 	case
-		=2
-		=3
+		two
+		three
 
 test
 	name =true when ordered

@@ -26,15 +26,15 @@ struct Tools {
 }
 
 Tree jack( Tools tools , File code ) {
-	return tools.jack( Tree.parse( code ) );
+	return tools.jack( new Tree( code ) );
 }
 
 Tree jack( File code , Tools tools ) {
-	return tools.jack( Tree.parse( code ) );
+	return tools.jack( new Tree( code ) );
 }
 
 Tree jack( Tools tools , string code , string uri = "" ) {
-	return tools.jack( Tree.parse( code , uri ) );
+	return tools.jack( new Tree( code , uri ) );
 }
 
 Tree jack( Tree code , Tools tools ) {
@@ -62,42 +62,43 @@ static this() {
 			Tree[] childs = [];
 			foreach( Tree child ; code.childs ) {
 				auto res = tools.jack( child );
-				if( cast( TreeList ) res ) {
-					childs ~= res.childs;
-				} else {
+				if( res.name.length ) {
 					childs ~= res;
+				} else {
+					childs ~= res.childs;
 				}
 			}
-			return code.clone( childs );
+			return code.make( null , null , childs );
 		},
 	] );
 
 	tools[ "meta" ] = Tools( [
 		"name" : ( Tools tools , Tree code ) {
 			code = tools[""]( tools , code );
-			return Tree.List( code.childs.map!( child => Tree.Value( child.name ) ).array );
+			return new Tree( "" , "" , code.childs.map!( child => new Tree( "str" , child.name , [] ) ).array );
 		},
 		"tree" : ( Tools tools , Tree code ) {
-			return Tree.List( code.childs );
+			return new Tree( "" , "" , code.childs );
 		},
 		"make" : ( Tools tools , Tree code ) {
 			auto name = tools[""]( tools , code[ "name" ][0] );
+			auto value = tools[""]( tools , code[ "value" ][0] );
 			auto childs = tools[""]( tools , code[ "child" ][0] );
-			return Tree.Name( name.value , childs.childs );
+			return new Tree( name.value , value.value , childs.childs );
 		},
 		"hide" : ( Tools tools , Tree code ) {
-			return Tree.List([]);
+			return new Tree( "" , "" , [] );
 		},
 		"case" : ( Tools tools , Tree code ) {
 			code = tools[""]( tools , code );
-			return Tree.List( code.childs.map!( child => Tree.Name( child.name ~ "!" ).jack( tools ) ).array );
+			return new Tree( "" , "" , code.childs.map!( child => new Tree( child.name ~ "!" , "" , [] ).jack( tools ) ).array );
 		},
 		"jack" : ( Tools tools , Tree code ) {
 			Tools subTools;
 			auto defTools = Tools([
 				"inherit" : ( Tools tools2 , Tree code2 ) {
 					subTools = tools ~ subTools;
-					return Tree.List([]);
+					return new Tree( "" , "" , [] );
 				},
 				"let" : ( Tools tools2 , Tree code2 ) {
 					foreach( let ; code2.childs ) {
@@ -105,21 +106,21 @@ static this() {
 						subTools[ let.name ] = ( Tools tools3 , Tree code3 ) {
 							tools3 = tools3 ~ Tools([
 								"from" : ( Tools tools4 , Tree code4 ) {
-									return Tree.List( tools[""]( tools4 , code3 ).childs );
+									return new Tree( "" , "" , tools[""]( tools4 , code3 ).childs );
 								},
 							]);
-							return Tree.List( tools[""]( tools3 , let ).childs );
+							return new Tree( "" , "" , tools[""]( tools3 , let ).childs );
 						};
 					}
-					return Tree.List([]);
+					return new Tree( "" , "" , [] );
 				},
 			]);
 			code = tools[""]( tools ~ defTools, code );
 			code = tools[""]( subTools , code );
-			return Tree.List( code.childs );
+			return new Tree( "" , "" , code.childs );
 		},
 		"let" : ( Tools tools , Tree code ) {
-			return Tree.List([]);
+			return new Tree( "" , "" , [] );
 		}
 	] );
 
@@ -134,27 +135,27 @@ static this() {
 		},
 		"cut-head" : ( Tools tools , Tree code ) {
 			code = tools[""]( tools , code );
-			return Tree.List( code[ 1 .. $ ] );
+			return new Tree( "" , "" , code[ 1 .. $ ] );
 		},
 		"cut-tail" : ( Tools tools , Tree code ) {
 			code = tools[""]( tools , code );
-			return Tree.List( code[ 0 .. $ - 1 ] );
+			return new Tree( "" , "" , code[ 0 .. $ - 1 ] );
 		},
 	] );
 
 	tools[ "test" ] = Tools( [
 		"test" : ( Tools tools , Tree code ) {
 			auto cases = code[ "case" ];
-			auto one = tools[""]( tools , cases[0] ).rename( "result" );
-			auto two = tools[""]( tools , cases[1] ).rename( "result" );
+			auto one = tools[""]( tools , cases[0] ).make( "result" );
+			auto two = tools[""]( tools , cases[1] ).make( "result" );
 			auto name = code[ "name" ];
 			if( one.to!string != two.to!string ) {
 				throw new Exception( "Test fail: " ~ name.to!string ~ one.to!string ~ two.to!string ~ "----------------" );
 			}
-			return Tree.List([]); //code.clone( name.childs ~ cases.childs ~ [ one ] );
+			return new Tree( "" , "" , [] ); //code.clone( name.childs ~ cases.childs ~ [ one ] );
 		},
 		"log" : ( Tools tools , Tree code ) {
-			code = Tree.List( tools[""]( tools , code ).childs );
+			code = new Tree( "" , "" , tools[""]( tools , code ).childs );
 			code.pipe( stdout );
 			return code;
 		},
@@ -169,30 +170,30 @@ static this() {
 		},
 		"false?" : ( Tools tools , Tree code ) {
 			auto list = tools[""]( tools , code );
-			return Tree.List( list.childs.map!( ( child ){
-				return Tree.Name( child.name == "true" ? "false" : "true" );
+			return new Tree( "" , "" , list.childs.map!( ( child ){
+				return new Tree( child.name == "true" ? "false" : "true" , "" , [] );
 			} ).array );
 		},
 		"every?" : ( Tools tools , Tree code ) {
 			auto list = tools[""]( tools , code );
 			foreach( item ; list.childs ) {
-				if( item.name == "false" ) return Tree.Name( "false" );
+				if( item.name == "false" ) return new Tree( "false" , "" , [] );
 			}
-			return Tree.Name( "true" );
+			return new Tree( "true" , "" , [] );
 		},
 		"some?" : ( Tools tools , Tree code ) {
 			auto list = tools[""]( tools , code );
 			foreach( item ; list.childs ) {
-				if( item.name == "true" ) return Tree.Name( "true" );
+				if( item.name == "true" ) return new Tree( "true" , "" , [] );
 			}
-			return Tree.Name( "false" );
+			return new Tree( "false" , "" , [] );
 		},
 		"order?" : ( Tools tools , Tree code ) {
 			auto list = tools[""]( tools , code );
 			for( auto i = 0 ; i < list.length - 1 ; ++i ) {
-				if( list[ i ].value > list[ i + 1 ].value ) return Tree.Name( "false" );
+				if( list[ i ].value > list[ i + 1 ].value ) return new Tree( "false" , "" , [] );
 			}
-			return Tree.Name( "true" );
+			return new Tree( "true" , "" , [] );
 		},
 	] );
 
