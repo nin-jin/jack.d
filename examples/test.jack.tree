@@ -9,7 +9,7 @@ test
 
 test
 	name =get first element of list
-	lisp =( car '( 'one 'two 'three ) )
+	lisp =( car '( one two three ) )
 	case head
 		one
 		two
@@ -18,7 +18,7 @@ test
 
 test
 	name =get last element of list
-	lisp =( car last '( 'one 'two 'three ) )
+	lisp =( car ( last '( one two three ) ) )
 	case tail
 		one
 		two
@@ -27,7 +27,7 @@ test
 
 test
 	name =get list without first element
-	lisp =( cdr '( 'one 'two 'three ) )
+	lisp =( cdr '( one two three ) )
 	case cut-head
 		one
 		two
@@ -38,7 +38,7 @@ test
 
 test
 	name =get list without last element
-	lisp =( butlast '( 'one 'two 'three ) )
+	lisp =( butlast '( one two three ) )
 	case cut-tail
 		one
 		two
@@ -50,8 +50,8 @@ test
 test
 	name =quote tree
 	name =make tree node by name an child list
-	lisp ='( car '( 'one ) )
-	lisp =( cons car '( 'one ) )
+	lisp ='( car one )
+	lisp =( cons 'car '( one ) )
 	case tree head
 		=one
 		two
@@ -62,7 +62,7 @@ test
 
 test
 	name =evaluate jack code
-	lisp =( eval '( car '( 'one 'two ) ) )
+	lisp =( eval '( car '( one two ) ) )
 	case jack
 		inherit
 		tree head
