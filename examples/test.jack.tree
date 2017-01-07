@@ -1,15 +1,15 @@
 test
-	name =name of struct node as value node
+	name \name of struct node as value node
 	case name
-		int =1
-		float =1.1
+		int \1
+		float \1.1
 	case
-		str =int
-		str =float
+		str \int
+		str \float
 
 test
-	name =get first element of list
-	lisp =( car '( 'one 'two 'three ) )
+	name \get first element of list
+	lisp \( car '( 'one 'two 'three ) )
 	case head
 		one
 		two
@@ -17,8 +17,8 @@ test
 	case one
 
 test
-	name =get last element of list
-	lisp =( car last '( 'one 'two 'three ) )
+	name \get last element of list
+	lisp \( car last '( 'one 'two 'three ) )
 	case tail
 		one
 		two
@@ -26,8 +26,8 @@ test
 	case three
 
 test
-	name =get list without first element
-	lisp =( cdr '( 'one 'two 'three ) )
+	name \get list without first element
+	lisp \( cdr '( 'one 'two 'three ) )
 	case cut-head
 		one
 		two
@@ -37,8 +37,8 @@ test
 		three
 
 test
-	name =get list without last element
-	lisp =( butlast '( 'one 'two 'three ) )
+	name \get list without last element
+	lisp \( butlast '( 'one 'two 'three ) )
 	case cut-tail
 		one
 		two
@@ -48,21 +48,21 @@ test
 		two
 
 test
-	name =quote tree
-	name =make tree node by name an child list
-	lisp ='( car '( 'one ) )
-	lisp =( cons car '( 'one ) )
+	name \quote tree
+	name \make tree node by name an child list
+	lisp \'( car '( 'one ) )
+	lisp \( cons car '( 'one ) )
 	case tree head
-		=one
+		\one
 		two
 	case make
-		name =head
-		value =one
+		name \head
+		value \one
 		child two
 
 test
-	name =evaluate jack code
-	lisp =( eval '( car '( 'one 'two ) ) )
+	name \evaluate jack code
+	lisp \( eval '( car '( 'one 'two ) ) )
 	case jack
 		inherit
 		tree head
@@ -73,15 +73,15 @@ test
 		two
 
 test
-	name =define and use custom macro
+	name \define and use custom macro
 	case jack
 		inherit
-		let pi float =3.14
+		let pi float \3.14
 		tree pi
-	case float =3.14
+	case float \3.14
 
 test
-	name =define and use custom macro with arguments
+	name \define and use custom macro with arguments
 	case jack
 		inherit
 		let body cut-head cut-tail from
@@ -95,85 +95,85 @@ test
 		three
 
 test
-	name =true when ordered
+	name \true when ordered
 	case order?
-		int =1
-		int =2
-		int =2
+		int \1
+		int \2
+		int \2
 	case true
 
 test
-	name =false when not ordered
+	name \false when not ordered
 	case order?
-		int =1
-		int =2
-		int =1
+		int \1
+		int \2
+		int \1
 	case false
 
 test
-	name =true when all true
+	name \true when all true
 	case every?
 		true
 		every?
 	case true
 
 test
-	name =false when some false
+	name \false when some false
 	case every?
 		false
 		true
 	case false
 
 test
-	name =true when some true
+	name \true when some true
 	case some?
 		false
 		true
 	case true
 
 test
-	name =false when all false
+	name \false when all false
 	case some?
 		false
 		some?
 	case false
 
 test
-	name =true when false and false when true
+	name \true when false and false when true
 	case false? true
 	case false? false? false
 
 hide test
-	name =true boolean condition
+	name \true boolean condition
 	case jack
-		tree case false? false
-		let true! =yes
-		let false! =no
-	case =yes
+		tree switch false? false
+		let true! \yes
+		let false! \no
+	case \yes
 
 hide test
-	name =false boolean condition
+	name \false boolean condition
 	case jack
 		tree switch false? true
-		when true =yes
-		when false =no
-	case =no
+		when true \yes
+		when false \no
+	case \no
 
 hide test
-	name =handle exception on boolean condition
+	name \handle exception on boolean condition
 	case jack
-		tree switch false? =xxx
-		when true =yes
-		when false =no
-		when not-bool =wrong
-	case =wrong
+		tree switch false? \xxx
+		when true \yes
+		when false \no
+		when not-bool \wrong
+	case \wrong
 
 hide
-	let x =0 
+	let x \0 
 	scope
 		inc x
 		rewind
 
 hide ./math ./logic order?
-	int =1
-	int =2
+	int \1
+	int \2
